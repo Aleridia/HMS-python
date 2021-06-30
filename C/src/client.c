@@ -10,6 +10,9 @@
 
 #define MAX_LENGTH 150
 #define TYPE "temperature"
+#define IP "127.0.0.1"
+#define FILEPATH "../../data/temperature.tsv"
+
 int hSocket;
 
 //Create a Socket for server communication
@@ -24,7 +27,7 @@ int SocketConnect(int hSocket)
 {
     int ServerPort = 90190;
     struct sockaddr_in remote = {0};
-    remote.sin_addr.s_addr = inet_addr("127.0.0.1"); //Local Host
+    remote.sin_addr.s_addr = inet_addr(IP); //Local Host
     remote.sin_family = AF_INET;
     remote.sin_port = htons(ServerPort);
     return connect(hSocket, (struct sockaddr *)&remote, sizeof(struct sockaddr_in));
@@ -51,7 +54,7 @@ void sendMessage()
     // On suppose qu'on est sur le capteur temperature
     FILE *file = NULL;
 
-    file = fopen("../../data/temperature.tsv", "r+");
+    file = fopen(FILEPATH, "r+");
 
     //check if we opened the file
     if (file == NULL)
