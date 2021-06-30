@@ -1,6 +1,6 @@
 dictionnaire = dict()
 
-with open("XSens1200.csv") as f:
+with open("../data/XSens1200.csv") as f:
     content = f.readlines()
 
     nbLine = 0

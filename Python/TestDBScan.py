@@ -11,8 +11,8 @@ X = pd.DataFrame(X, columns = ['abscisse','ordonnée'])
 
 # ----------------------------------------------
 
-dfApprentissage = pd.read_csv('Apprentissage.csv')
-dfDetection = pd.read_csv('Detection.csv')
+dfApprentissage = pd.read_csv('../data/Apprentissage.csv')
+dfDetection = pd.read_csv('../data/Detection.csv')
 
 # Donnée d'apprentissage
 X_train = pd.DataFrame(np.c_[dfApprentissage['temperature'], dfApprentissage['temperature']], columns=['x1', 'x2'])
