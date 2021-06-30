@@ -87,8 +87,7 @@ int main() {
         }
 
         printf("%s\n", client_message);
-        //close(sock);
-        //sleep(1);
+        close(sock);
     }
 
     return 0;

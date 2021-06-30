@@ -8,9 +8,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-
 #define MAX_LENGTH 150
-
+#define TYPE "temperature"
 int hSocket;
 
 //Create a Socket for server communication
@@ -47,6 +46,8 @@ int SocketSend(int hSocket, char *Rqst, short lenRqst)
 
 void sendMessage()
 {
+
+    /*************** FILE *****************/
     // On suppose qu'on est sur le capteur temperature
     FILE *file = NULL;
 
@@ -63,6 +64,25 @@ void sendMessage()
 
     while (!feof(file))
     {
+
+        /**************** SOCKET **********************/
+        //Create socket
+        hSocket = SocketCreate();
+
+        if (hSocket == -1)
+        {
+            printf("Could not create socket\n");
+        }
+
+        printf("Socket is created\n");
+
+        //Connect to remote server
+        if (SocketConnect(hSocket) < 0)
+        {
+            perror("connect failed.\n");
+        }
+        printf("Sucessfully conected with server\n");
+
         fgets(buffer, MAX_LENGTH, file);
 
         if (ferror(file))
@@ -71,12 +91,30 @@ void sendMessage()
             break;
         }
 
-        printf("%s\n", buffer);
+        char *token = strtok(buffer, ";");
+
+        //get the timecode
+        char *date = strtok(NULL, ";");
+
+        //get the value
+        char *tmp = strtok(NULL, ";");
+        char value[strlen(tmp)];
+        strcpy(value, tmp);
+
+        //delete the \n
+        value[strlen(value) - 2] = '\0';
+
+        //put the sensor type
+        strcat(value, ";");
+        strcat(value, TYPE);
 
         //Send data to the server
-        SocketSend(hSocket, buffer, MAX_LENGTH);
-    }
+        SocketSend(hSocket, value, MAX_LENGTH);
 
+        close(hSocket);
+        shutdown(hSocket, 0);
+        sleep(0.1);
+    }
 
     fclose(file);
 }
@@ -84,29 +122,7 @@ void sendMessage()
 int main()
 {
 
-    //Create socket
-    hSocket = SocketCreate();
-
-    if (hSocket == -1)
-    {
-        printf("Could not create socket\n");
-        return 1;
-    }
-
-    printf("Socket is created\n");
-
-    //Connect to remote server
-    if (SocketConnect(hSocket) < 0)
-    {
-        perror("connect failed.\n");
-        return 1;
-    }
-    printf("Sucessfully conected with server\n");
-
     sendMessage();
-
-    close(hSocket);
-    shutdown(hSocket, 0);
 
     return 0;
 }
