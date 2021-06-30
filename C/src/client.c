@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <time.h>
 
 #define MAX_LENGTH 150
 #define TYPE "temperature"
@@ -18,7 +19,7 @@ int hSocket;
 //Create a Socket for server communication
 short SocketCreate(void)
 {
-    printf("Create the socket\n");
+    //printf("Create the socket\n");
     return socket(AF_INET, SOCK_STREAM, 0);
 }
 
@@ -65,6 +66,11 @@ void sendMessage()
 
     char *buffer = (char *)malloc(MAX_LENGTH);
 
+    float temps;
+    clock_t t1, t2;
+    int sequence = 0;
+
+    t1 = clock();
     while (!feof(file))
     {
 
@@ -77,14 +83,14 @@ void sendMessage()
             printf("Could not create socket\n");
         }
 
-        printf("Socket is created\n");
+       // printf("Socket is created\n");
 
         //Connect to remote server
         if (SocketConnect(hSocket) < 0)
         {
             perror("connect failed.\n");
         }
-        printf("Sucessfully conected with server\n");
+        //printf("Sucessfully conected with server\n");
 
         fgets(buffer, MAX_LENGTH, file);
 
@@ -100,23 +106,37 @@ void sendMessage()
         char *date = strtok(NULL, ";");
 
         //get the value
-        char *tmp = strtok(NULL, ",");
-        char value[strlen(tmp)];
+        char *tmp = strtok(NULL, ";");
+        char value[256];
         strcpy(value, tmp);
 
         //delete the \n
         value[strlen(value) - 2] = '\0';
 
         //put the sensor type
-        strcat(value, ";");
+        strcat(value, ",");
         strcat(value, TYPE);
+
+        //if it makes 5s, change the sequence
+        if((float)(clock() - t1 )/CLOCKS_PER_SEC > 5.0)
+        {
+            //update the sequence
+            sequence ++;
+            t1 = clock();
+        }
+            
+        //int to string
+        char toString[256];
+        sprintf(toString,"%d", sequence);
+
+        //add the sequence to the message
+        strcat(value, toString);
 
         //Send data to the server
         SocketSend(hSocket, value, MAX_LENGTH);
 
         close(hSocket);
         shutdown(hSocket, 0);
-        sleep(0.1);
     }
 
     fclose(file);

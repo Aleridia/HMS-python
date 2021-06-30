@@ -14,13 +14,12 @@ short SocketCreate(void)
 {
     printf("Create the socket\n");
     return socket(AF_INET, SOCK_STREAM, 0);
-
 }
 
 int BindCreatedSocket(int hSocket)
 {
     int ClientPort = 90190;
-    struct sockaddr_in  remote= {0};
+    struct sockaddr_in remote = {0};
 
     /* Internet address family */
     remote.sin_family = AF_INET;
@@ -29,14 +28,22 @@ int BindCreatedSocket(int hSocket)
     remote.sin_addr.s_addr = htonl(INADDR_ANY);
     remote.sin_port = htons(ClientPort); /* Local port */
 
-    return bind(hSocket,(struct sockaddr *)&remote,sizeof(remote));
+    return bind(hSocket, (struct sockaddr *)&remote, sizeof(remote));
 }
 
-int main() {
+void processData(char *sensor)
+{
+
+    if (strcmp(sensor, "temperature") == 0)
+    {
+    }
+}
+int main()
+{
 
     int socket_desc, sock, clientLen;
     struct sockaddr_in client;
-    char client_message[200]= {0};
+    char client_message[200] = {0};
 
     //Create socket
     socket_desc = SocketCreate();
@@ -49,7 +56,7 @@ int main() {
     printf("Socket created\n");
 
     //Bind
-    if( BindCreatedSocket(socket_desc) < 0)
+    if (BindCreatedSocket(socket_desc) < 0)
     {
         //print the error message
         perror("bind failed.");
@@ -62,13 +69,13 @@ int main() {
     listen(socket_desc, 5);
 
     //Accept and incoming connection
-    while(1)
+    while (1)
     {
         printf("Waiting for incoming connections...\n");
         clientLen = sizeof(struct sockaddr_in);
 
         //accept connection from an incoming client
-        sock = accept(socket_desc,(struct sockaddr *)&client,(socklen_t*)&clientLen);
+        sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t *)&clientLen);
 
         if (sock < 0)
         {
@@ -80,7 +87,7 @@ int main() {
         memset(client_message, '\0', sizeof client_message);
 
         //Receive a reply from the client
-        if( recv(sock, client_message, 200, 0) < 0)
+        if (recv(sock, client_message, 200, 0) < 0)
         {
             printf("recv failed");
             break;
