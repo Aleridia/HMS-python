@@ -100,7 +100,7 @@ void sendMessage()
         char *date = strtok(NULL, ";");
 
         //get the value
-        char *tmp = strtok(NULL, ";");
+        char *tmp = strtok(NULL, ",");
         char value[strlen(tmp)];
         strcpy(value, tmp);
 
