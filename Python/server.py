@@ -5,11 +5,12 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(("127.0.0.1", 2525))
 s.listen(5)
 
-#sometimes we can have multiple message on a line
+
+# sometimes we can have multiple message on a line
 def parse(data):
     data = data.split(';')
     return (data[0], data[1])
-   
+
 try:
     while True:
         (client, addr) = s.accept()
