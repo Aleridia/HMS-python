@@ -9,13 +9,6 @@
 #include <unistd.h>
 #include <time.h>
 
-#define MAX_LENGTH 150
-#define TYPE "temperature"
-#define IP "127.0.0.1"
-#define FILEPATH "../../data/temperature.tsv"
-
-int hSocket;
-
 //Create a Socket for server communication
 short SocketCreate(void)
 {
@@ -24,11 +17,11 @@ short SocketCreate(void)
 }
 
 //try to connect with server
-int SocketConnect(int hSocket)
+int SocketConnect(int hSocket, char* ip)
 {
     int ServerPort = 90190;
     struct sockaddr_in remote = {0};
-    remote.sin_addr.s_addr = inet_addr(IP); //Local Host
+    remote.sin_addr.s_addr = inet_addr(ip);
     remote.sin_family = AF_INET;
     remote.sin_port = htons(ServerPort);
     return connect(hSocket, (struct sockaddr *)&remote, sizeof(struct sockaddr_in));
@@ -48,104 +41,72 @@ int SocketSend(int hSocket, char *Rqst, short lenRqst)
     return send(hSocket, Rqst, lenRqst, 0);
 }
 
-void sendMessage()
+int main(int argc, char *argv[])
 {
+	if(argc < 4) {
+		printf("Usage : ./client <vms> <name> <source>\n");
+		return -1;
+	}
+	
+	char* ip = argv[1];
+	char* name = argv[2];
+	char* source = argv[3];
+	
+	printf("Initializing client with name %s and %s as source file.\n", name, source);
+	
+	FILE *file = NULL;
 
-    /*************** FILE *****************/
-    // On suppose qu'on est sur le capteur temperature
-    FILE *file = NULL;
-
-    file = fopen(FILEPATH, "r+");
+    file = fopen(source, "r");
 
     //check if we opened the file
     if (file == NULL)
     {
         printf("Erreur lors de l'ouverture du fichier d entree.\n");
-        return;
+        return -1;
     }
-
-    char *buffer = (char *)malloc(MAX_LENGTH);
 
     float temps;
     clock_t t1, t2;
     int sequence = 0;
 
     t1 = clock();
-    while (!feof(file))
-    {
-
-        /**************** SOCKET **********************/
-        //Create socket
-        hSocket = SocketCreate();
-
-        if (hSocket == -1)
-        {
-            printf("Could not create socket\n");
-        }
-
-       // printf("Socket is created\n");
-
-        //Connect to remote server
-        if (SocketConnect(hSocket) < 0)
-        {
-            perror("connect failed.\n");
-        }
-        //printf("Sucessfully conected with server\n");
-
-        fgets(buffer, MAX_LENGTH, file);
-
-        if (ferror(file))
-        {
-            fprintf(stderr, "Reading error with code \n");
-            break;
-        }
-
-        char *token = strtok(buffer, ";");
-
-        //get the timecode
-        char *date = strtok(NULL, ";");
-
-        //get the value
-        char *tmp = strtok(NULL, ";");
-        char value[256];
-        strcpy(value, tmp);
-
-        //delete the \n
-        value[strlen(value) - 2] = '\0';
-
-        //put the sensor type
-        strcat(value, ",");
-        strcat(value, TYPE);
-
-        //if it makes 5s, change the sequence
+	
+	size_t len = 0;
+    ssize_t read;
+	char * line = NULL;
+	int hSocket = SocketCreate();
+	
+	if (SocketConnect(hSocket, ip) < 0) {
+		perror("connect failed.\n");
+    }
+	
+	while ((read = getline(&line, &len, file)) != -1) {
+		char *token = strtok(line, ";");
+		char *date = strtok(NULL, ";");
+		char *value = strtok(NULL, ";");
+		float f = strtod(value, NULL);
+		
+		//printf("%s, %f\n", date, f);
+		//if it makes 5s, change the sequence
         if((float)(clock() - t1 )/CLOCKS_PER_SEC > 5.0)
         {
             //update the sequence
             sequence ++;
             t1 = clock();
         }
-            
-        //int to string
-        char toString[256];
-        sprintf(toString,"%d", sequence);
-
-        //add the sequence to the message
-        strcat(value, toString);
-
-        //Send data to the server
-        SocketSend(hSocket, value, MAX_LENGTH);
-
-        close(hSocket);
-        shutdown(hSocket, 0);
+		
+		char toString[256];
+		sprintf(toString, "%f;%s|", f, name); //, name); //| is used a common end character, instead of \0, ; is used as separator!
+		printf("%s\n", toString);
+		int size = strlen(toString);
+		SocketSend(hSocket, toString, size);
     }
+	
+	close(hSocket);
+	shutdown(hSocket, 0);
 
     fclose(file);
-}
-
-int main()
-{
-
-    sendMessage();
-
+	if (line)
+        free(line);
     return 0;
 }

@@ -6,7 +6,7 @@ short SocketCreate();
 int BindCreatedSocket(int hSocket);
 
 //Permet de se co,nnecter au socket passé en paramètre
-int SocketConnect(int hSocket);
+int SocketConnect(int hSocket, char* ip);
 
 //Permet d'envoyer des données sur le socket au serveur
 int SocketSend(int hSocket,char* Rqst,short lenRqst);
