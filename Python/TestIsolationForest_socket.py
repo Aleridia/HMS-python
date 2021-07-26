@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os, sys, socket, time
 
+data = dict()
 """
 Fonction d'apprentissage
 """
@@ -16,6 +17,8 @@ def learning():
     for elem in dfApprentissage.head(0):
         if elem == 'time_code':
             continue
+
+        data[elem] = []
 
         X_train = pd.DataFrame(np.c_[dfApprentissage[elem]], columns=['x1'])
 
@@ -29,6 +32,24 @@ def learning():
 
 # --------Detection---------
 
+def detection():
+    for cle, valeur in data.items():
+        X_test = pd.DataFrame(np.c_[valeur], columns=['x1'])
+        # On prédit
+        dfDetection['anomaly'] = object[cle].predict(X_test)
+
+        # On récupère les anomalies
+        nb_test = 0
+        for i in range(len(dfDetection['anomaly'])):
+            if dfDetection['anomaly'][i] != 1:
+                nb_test += 1
+
+        print("Nombre anomalie dans la base = " + str(nb_test) + "/" + str(len(X_test)))
+
+        # On vide la liste pour la prochaine rotation
+        data[cle].clear()
+
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(("127.0.0.1", 2525))
 s.listen(5)
@@ -40,25 +61,36 @@ def parse(data):
 
 
 object = learning()
+start = time.time()
+end = 0
 
-while 1:
-    dirs = os.listdir('../data/temperature')
+try:
+    while True:
+        (client, addr) = s.accept()
+        print("someone connected to me")
+        chunks = []
+        read = 0
 
-    for file in dirs:
-        name = file.split('_')[0]
-        dfDetection = pd.read_csv('../data/temperature/' + file)
+        while True:
+            chunk = client.recv(128)
+            if chunk == b'':
+                break
 
-        # Donnée de détection
-        X_test = pd.DataFrame(np.c_[dfDetection[name]], columns=['x1'])
-        # On prédit
-        dfDetection['anomaly'] = object[name].predict(X_test)
+            if (end - start) >= 10:
+                detection()
+                start = time.time()
 
-        # On récupère les anomalies
-        nb_test = 0
-        for i in range(len(dfDetection['anomaly'])):
-            if dfDetection['anomaly'][i] != 1:
-                nb_test += 1
-        
-        print("Nombre anomalie dans la base de test = " + str(nb_test) + "/" + str(len(X_test)))
-    
-    time.sleep(10)
+            end = time.time()
+
+            messages = chunk.decode('ascii')
+            messages = messages.split('|')
+
+            for message in messages[:-1]:
+                (value, sensor) = parse(message[:-1])
+
+                data[sensor].append(value)
+
+except Exception as ex:
+    print(ex)
+finally:
+    s.close()

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bf0718a2-0b77-469e-899d-f59af2c0413c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/TestIsolationForest_socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TestIsolationForest_socket.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
