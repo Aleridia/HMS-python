@@ -28,7 +28,7 @@ gcc client.c -o client
 
 ## Utilisation
 
-Ordre d'exécution : script python, serveur C, client C/src
+Ordre d'exécution : ```script python => serveur C => client C/src```
 Utilisez 3 shell différents
 
 ```sh
