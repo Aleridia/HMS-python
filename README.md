@@ -37,12 +37,13 @@ python3 TestIsolationForest_socket.py
 ```
 
 Spécifiez l'IP du serveur où le script python tourne :
+
 ```sh
 cd C/src
 ./server 127.0.1
 ```
 
-Usage : ./client <vms> <name> <sourc
+Usage : ```./client <vms> <name> <source```
 ```sh
 cd C/src
 ./client 127.0.0.1 temp0 ../../data/temperature.tsv
