@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="bf0718a2-0b77-469e-899d-f59af2c0413c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Python/TestIsolationForest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TestIsolationForest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python/TestIsolationForest_socket.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/TestIsolationForest_socket.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Python/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/Python/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/temperature.tsv" beforeDir="false" afterPath="$PROJECT_DIR$/data/temperature.tsv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +44,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="restartRequiresConfirmation" value="false" />
   </component>
-  <component name="RunManager" selected="Python.TestIsolationForest_socket">
+  <component name="RunManager" selected="Python.TestIsolationForest (1)">
     <configuration name="Python" type="PythonConfigurationType" factoryName="Python">
       <module name="HMS" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -86,19 +87,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="TestDBScan" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="HMS" />
+    <configuration name="TestIsolationForest (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="SDK_HOME" value="D:\WPy-3662\python-3.6.6.amd64\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="D:\CNAM\i2\Projet\Code\HMS-python\TestDBScan.py" />
+      <module name="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python/TestIsolationForest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -172,11 +173,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.TestIsolationForest (1)" />
         <item itemvalue="Python.TestIsolationForest_socket" />
         <item itemvalue="Python.TestIsolationForest_2" />
         <item itemvalue="Python.TestIsolationForest" />
         <item itemvalue="Python.TestDBScan (1)" />
-        <item itemvalue="Python.TestDBScan" />
       </list>
     </recent_temporary>
   </component>
@@ -193,5 +194,16 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.csv" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Python/TestIsolationForest_socket.py</url>
+          <line>104</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
