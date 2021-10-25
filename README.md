@@ -46,5 +46,5 @@ cd C/src
 Usage : ```./client <vms> <name> <source```
 ```sh
 cd C/src
-./client 127.0.0.1 temp0 ../../data/temperature.tsv
+./client 127.0.0.1 temperature ../../data/temperature.tsv
 ```
